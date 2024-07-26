@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title th:text="${title}">Show Contacts</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body th:replace="~{normal/base::layout(~{::section})}">
+    <section>
+       <div class="container">
+           <div class="row justify-content-center">
+               <div class="col-md-9.5">
+                   <div class="card mt-3">
+                       <div class="card-body">
+                           <h1 class="text-center">Your Contacts</h1>
+                           
+                           <!-- Search -->
+                           <div class="search-container my-3">
+                               <input onkeyup="search()" id="search-input" type="text" class="form-control" placeholder="Search your contact"/>
+                                <div class="search-result">
+                                   <!-- Result is here -->
+                                   <h1>This is result</h1>
+                                </div>
+                           </div>
+                           
+                           <div class="table-responsive">
+                               <table class="table table-hover">
+                                   <thead class="thead-dark">
+                                       <tr> 
+                                           <th scope="col">#ID</th>
+                                           <th scope="col">Name</th>
+                                           <th scope="col">Email</th>
+                                           <th scope="col">Phone</th>
+                                           <th scope="col">Action</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody>
+                                       <tr th:each="c : ${contacts}">
+                                           <th scope="row" th:text="'SCMUSER' + ${c.cId}">1</th>
+                                           <td>
+                                               <img src="" class="my_profile_picture" th:src="@{'/img/' + ${c.image}}" alt="profile photo"/>
+                                               <span th:text="${c.name}"></span>
+                                           </td>
+                                           <td>
+                                               <a href="#" th:href="@{'/user/contact/' + ${c.cId}}">
+                                                   <span th:text="${c.email}"></span>
+                                               </a>
+                                           </td>
+                                           <td th:text="${c.phone}">@mdo</td>
+                                           <td>
+                                               <a href="#" th:onclick="|deleteContact(${c.cId})|" class="btn btn-danger btn-small">
+                                                   <i class="fas fa-trash-alt"></i> Delete
+                                               </a>
+                                               <form method="post" th:action="@{'/user/update-contact/' + ${c.cId}}" class="mt-2">
+                                                   <button type="submit" class="btn btn-primary btn-small">
+                                                       <i class="fas fa-edit"></i> Update
+                                                   </button>
+                                               </form>
+                                           </td>
+                                       </tr>
+                                   </tbody>
+                               </table>
+                           </div>
+                           
+                           <!-- Pagination Part -->
+                           <nav aria-label="Page navigation example">
+                              <ul class="pagination">
+                                  <li th:if="${currentPage != 0}" class="page-item">
+                                      <a th:href="@{'/user/show-contacts/' + ${currentPage - 1}}" class="page-link">Previous</a>
+                                  </li>
+                                  <li th:classappend="${currentPage==i-1?'active':''}" th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item">
+                                      <a th:href="@{'/user/show-contacts/' + ${i - 1}}" class="page-link"><span th:text="${i}"></span></a>
+                                  </li>
+                                  <li th:if="${currentPage + 1 != totalPages}" class="page-item">
+                                      <a th:href="@{'/user/show-contacts/' + ${currentPage + 1}}" class="page-link">Next</a>
+                                  </li>
+                              </ul>
+                           </nav>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+       
+       
+       	<script>
+     		$('document').ready(() => {
+     		$(".item").removeClass("active");
+     		$("#contacts-link").addClass("active");
+     		});
+     	</script>
+    </section>
+
+    <!-- Add Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
